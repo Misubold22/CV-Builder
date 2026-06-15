@@ -1,0 +1,29 @@
+export function ResumePreview(props) {
+  return (
+    <>
+      <div className="personal-details">
+        <p>{props.firstname}</p>
+        <p>{props.lastname}</p>
+        <p>{props.phone}</p>
+        <p>{props.email}</p>
+        <p>{props.address}</p>
+        <p>{props.occupation}</p>
+        <p>{props.linkedin}</p>
+        <p>{props.portfolio}</p>
+        <p>{props.about}</p>
+      </div>
+      <div className="profile-picture">
+        {" "}
+        {props.file && (
+          <img
+            src={props.file}
+            alt="profile preview"
+            className="profile-preview"
+          />
+        )}
+      </div>
+      <p className="date">Start date: {props.startDateValue}</p>{" "}
+      <p className="date">End date: {props.endDateValue}</p>{" "}
+    </>
+  );
+}
