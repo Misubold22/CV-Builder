@@ -22,8 +22,6 @@ export function ResumePreview(props) {
           />
         )}
       </div>
-      <p className="date">Start date: {props.startDateValue}</p>{" "}
-      <p className="date">End date: {props.endDateValue}</p>{" "}
     </>
   );
 }

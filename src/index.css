@@ -347,6 +347,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:before {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: clamp(0.4rem, 1vw, 0.8rem);
 }
 
 .card-details {
@@ -375,7 +376,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:before {
 }
 
 /*Text*/
-.text-title {
+.job-role {
   background: none;
 
   text-align: left;
@@ -386,7 +387,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:before {
   color: #333;
 }
 
-.text-body {
+.job-date {
   font-weight: bold;
   color: black;
   font-weight: bolder;
@@ -397,16 +398,11 @@ input[type="date"]::-webkit-calendar-picker-indicator:before {
   font-size: clamp(12px, 1.5vw, 15px);
 }
 
-.text-title,
-.text-body {
+.job-role,
+.job-date {
   margin: 0;
 }
 
-.text-title {
-}
-
-.text-body {
-}
 /*Hover*/
 .card:hover {
   border-color: #008bf8;

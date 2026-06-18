@@ -1,39 +1,66 @@
 import { CustomButton } from "../common/CustomButton.jsx";
-import { EmploymentDate } from "./EmploymentDate.jsx";
 
-export function EmploymentHistoryForm({
-  isHidden,
-  setIsHidden,
-  onStartDateChange,
-  selectedStartDate,
-  onEndDateChange,
-  selectedEndDate,
-}) {
-  // e.preventDefault();
-  //console.log("Button clicked!");
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form submitted");
+import { useState } from "react";
+
+function GenerateId() {
+  return crypto.randomUUID();
+}
+
+export function EmploymentHistoryForm({ isHidden, setIsHidden, handleSubmit }) {
+  const handleChanges = () => {
+    setIsHidden(isHidden);
   };
 
-  const handleChanges = () => {
+  const [jobrole, setJobRole] = useState("");
+  const [employer, setEmployer] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
+  const submitForm = (e) => {
+    e.preventDefault();
+    if (!jobrole.trim() || !employer.trim()) return;
+
+    const newJob = {
+      jobrole: e.target.jobrole.value,
+      employer: e.target.employer.value,
+      startDate: e.target.startdate.value,
+      endDate: e.target.enddate.value,
+      id: GenerateId(),
+    };
+    handleSubmit(newJob);
+    setJobRole("");
+    setEmployer("");
+    setStartDate("");
+    setEndDate("");
     setIsHidden(isHidden);
   };
 
   return (
     <>
       <form
-        onSubmit={handleSubmit}
+        onSubmit={submitForm}
         style={{ display: isHidden ? "none" : "block" }}
       >
         <div className="form-row">
           <div className="form-group">
             <label htmlFor="jobrole">Job Role:</label>
-            <input type="text" id="jobrole" name="jobrole" />
+            <input
+              type="text"
+              name="jobrole"
+              id="jobrole"
+              value={jobrole}
+              onChange={(e) => setJobRole(e.target.value)}
+            />
           </div>
           <div className="form-group">
             <label htmlFor="employer">Employer:</label>
-            <input type="text" id="employer" name="employer" />
+            <input
+              type="text"
+              name="employer"
+              id="employer"
+              value={employer}
+              onChange={(e) => setEmployer(e.target.value)}
+            />
           </div>
         </div>
 
@@ -41,20 +68,24 @@ export function EmploymentHistoryForm({
           <div className="form-group">
             <label htmlFor="startdate">Start Date:</label>
 
-            <EmploymentDate
-              selectedDate={selectedStartDate}
-              onStartDateChange={onStartDateChange}
-              id={"startdate"}
+            <input
+              id="startdate"
+              type="date"
+              name="startdate"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
             />
           </div>
 
           <div className="form-group">
             <label htmlFor="enddate">End Date:</label>
 
-            <EmploymentDate
-              selectedDate={selectedEndDate}
-              onStartDateChange={onEndDateChange}
-              id={"enddate"}
+            <input
+              id="enddate"
+              type="date"
+              name="enddate"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
             />
           </div>
         </div>

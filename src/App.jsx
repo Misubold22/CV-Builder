@@ -7,7 +7,24 @@ import { EmploymentHistory } from "./components/employment/EmploymentHistory.jsx
 import { EmploymentCard } from "./components/employment/EmploymentCard.jsx";
 import { EmploymentHistoryForm } from "./components/employment/EmploymentHistoryForm.jsx";
 import { ResumePreview } from "./components/preview/ResumePreview.jsx";
+import { ConvertToDisplayDate } from "./components/utils/dateUtils.js";
 
+//
+function EmploymentList({ jobs }) {
+  const listItems = jobs.map((job) => (
+    <li key={job.id}>
+      <p className="date">Job este: {job.jobrole}</p>{" "}
+      <p className="date">Employer este: {job.employer}</p>{" "}
+      <p className="date">
+        {" "}
+        {ConvertToDisplayDate(job.startDate)} -
+        {ConvertToDisplayDate(job.endDate)}
+      </p>{" "}
+    </li>
+  ));
+
+  return <ul>{listItems}</ul>;
+}
 //
 
 function App() {
@@ -29,8 +46,29 @@ function App() {
     setIsHidden(!isHidden);
   };
 
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  // const [startDate, setStartDate] = useState("");
+  //const [endDate, setEndDate] = useState("");
+
+  const pastJobs = [
+    {
+      id: 0, // Used in JSX as a key
+      jobrole: "Web Developer",
+      employer: "Startup Inc.",
+      startDate: "2021-06-15 ",
+      endDate: "2024-03-15",
+    },
+  ];
+
+  //
+  const [jobs, setJobs] = useState(pastJobs);
+
+  const handleSubmit = (job) => {
+    setJobs([...jobs, job]);
+  };
+
+  //return <>{listItems}</>;
+
+  ///
 
   return (
     <div className="split-container">
@@ -42,15 +80,13 @@ function App() {
             <ProfilePicture setProfilePreview={setProfilePreview} />
           </form>
           <EmploymentHistory />
-          <EmploymentCard />
+          <EmploymentCard people={jobs} />
+
           {isHidden && (
             <EmploymentHistoryForm
               isHidden={!isHidden}
               setIsHidden={setIsHidden}
-              onStartDateChange={setStartDate}
-              selectedStartDate={startDate}
-              selectedEndDate={endDate}
-              onEndDateChange={setEndDate}
+              handleSubmit={handleSubmit}
             />
           )}
 
@@ -69,7 +105,6 @@ function App() {
 
       <div className="split-right">
         <h1>Right Section</h1>
-
         <ResumePreview
           firstname={inputs.firstname}
           lastname={inputs.lastname}
@@ -81,10 +116,9 @@ function App() {
           portfolio={inputs.portfolio}
           about={inputs.about}
           file={profilePreview}
-          startDateValue={startDate}
-          endDateValue={endDate}
+          //   {listItems};
         />
-
+        <EmploymentList jobs={jobs} />
         <p>
           This is the right side of the split layout.
           <br />
