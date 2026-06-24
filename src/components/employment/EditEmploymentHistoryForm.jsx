@@ -1,39 +1,24 @@
 import { CustomButton } from "../common/CustomButton.jsx";
-import { useState } from "react";
 
-function GenerateId() {
-  // return crypto.randomUUID();
-  return Math.floor(Math.random() * 100);
-}
-
-export function EmploymentHistoryForm({ isHidden, setIsHidden, handleSubmit }) {
-  const handleChanges = () => {
-    setIsHidden(isHidden);
-  };
-
-  const [jobrole, setJobRole] = useState("");
-  const [employer, setEmployer] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-
+export function EditEmploymentHistoryForm({
+  isHidden,
+  setIsHidden,
+  handleSubmit,
+  editingJobId,
+  form,
+  setForm,
+}) {
   const submitForm = (e) => {
+    if (!form.jobrole.trim() || !form.employer.trim()) return;
+
     e.preventDefault();
-    if (!jobrole.trim() || !employer.trim()) return;
 
     const newJob = {
-      jobrole: e.target.jobrole.value,
-      employer: e.target.employer.value,
-      startDate: e.target.startdate.value,
-      endDate: e.target.enddate.value,
-      id: GenerateId(),
-      //id: nextId + 1,
+      ...form,
+      id: editingJobId,
     };
 
     handleSubmit(newJob);
-    setJobRole("");
-    setEmployer("");
-    setStartDate("");
-    setEndDate("");
     setIsHidden(isHidden);
   };
 
@@ -50,8 +35,8 @@ export function EmploymentHistoryForm({ isHidden, setIsHidden, handleSubmit }) {
               type="text"
               name="jobrole"
               id="jobrole"
-              value={jobrole}
-              onChange={(e) => setJobRole(e.target.value)}
+              value={form.jobrole}
+              onChange={(e) => setForm({ ...form, jobrole: e.target.value })}
             />
           </div>
           <div className="form-group">
@@ -60,8 +45,8 @@ export function EmploymentHistoryForm({ isHidden, setIsHidden, handleSubmit }) {
               type="text"
               name="employer"
               id="employer"
-              value={employer}
-              onChange={(e) => setEmployer(e.target.value)}
+              value={form.employer}
+              onChange={(e) => setForm({ ...form, employer: e.target.value })}
             />
           </div>
         </div>
@@ -74,8 +59,8 @@ export function EmploymentHistoryForm({ isHidden, setIsHidden, handleSubmit }) {
               id="startdate"
               type="date"
               name="startdate"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
+              value={form.startDate}
+              onChange={(e) => setForm({ ...form, startDate: e.target.value })}
             />
           </div>
 
@@ -86,8 +71,8 @@ export function EmploymentHistoryForm({ isHidden, setIsHidden, handleSubmit }) {
               id="enddate"
               type="date"
               name="enddate"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
+              value={form.endDate}
+              onChange={(e) => setForm({ ...form, endDate: e.target.value })}
             />
           </div>
         </div>
@@ -97,11 +82,14 @@ export function EmploymentHistoryForm({ isHidden, setIsHidden, handleSubmit }) {
 
             <textarea
               id="description"
-              name="about"
-              /* T    value={inputs.about}
-                onChange={handleChange} */
+              type="text"
+              name=" jobDescription"
+              value={form.jobDescription}
+              onChange={(e) =>
+                setForm({ ...form, jobDescription: e.target.value })
+              }
               placeholder="I did a lot of things!"
-              rows={2}
+              rows={4}
             />
           </div>
         </div>
@@ -113,7 +101,7 @@ export function EmploymentHistoryForm({ isHidden, setIsHidden, handleSubmit }) {
           <CustomButton
             className="cancel-btn"
             label="Cancel"
-            onClick={handleChanges}
+            onClick={() => setIsHidden(isHidden)}
           />
         </div>
       </form>

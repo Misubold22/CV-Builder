@@ -179,6 +179,12 @@ textarea {
   font-size: clamp(12px, 1.5vw, 14px);
   background: #ececec;
   transition: border-color 0.3s;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
+textarea {
+  resize: none;
 }
 
 .file {
@@ -298,6 +304,8 @@ input[type="file"]:hover {
   align-items: flex-start;
   justify-content: flex-start;
   gap: 0.3rem;
+
+  padding-bottom: clamp(0.5rem, 1.5vw, 1rem);
 }
 
 /* .date-container {
@@ -357,10 +365,11 @@ input[type="date"]::-webkit-calendar-picker-indicator:before {
 .button-container {
   position: relative;
 }
-.edit-btn {
+.edit-btn,
+.delete-btn {
   color: #385170;
 
-  font-size: 23px;
+  font-size: 22px;
   border-radius: 5px;
 
   text-wrap: wrap;
@@ -368,10 +377,10 @@ input[type="date"]::-webkit-calendar-picker-indicator:before {
   font-weight: lighter;
   cursor: pointer;
   border: none; /* ← important */
-  transition: background-color 0.2s ease;
 }
 
-.edit-btn:hover {
+.edit-btn:hover,
+.delete-btn:hover {
   color: #4a678d;
 }
 

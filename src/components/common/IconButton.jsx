@@ -1,9 +1,19 @@
-import { FaEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
+import { MdEdit } from "react-icons/md";
 
-export const IconButton = ({ onClick, label }) => {
+export const EditButton = ({ onClick, label }) => {
   return (
     <button className="edit-btn" onClick={onClick}>
-      <FaEdit />
+      <MdEdit />
+      {label}
+    </button>
+  );
+};
+
+export const DeleteButton = ({ onClick, label }) => {
+  return (
+    <button className="delete-btn" onClick={onClick}>
+      <MdDelete />
       {label}
     </button>
   );
