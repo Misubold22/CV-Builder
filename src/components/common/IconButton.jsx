@@ -18,3 +18,12 @@ export const DeleteButton = ({ onClick, label }) => {
     </button>
   );
 };
+
+export const SkillDeleteButton = ({ onClick, label }) => {
+  return (
+    <button className="skill-delete-btn" onClick={onClick}>
+      <MdDelete />
+      {label}
+    </button>
+  );
+};

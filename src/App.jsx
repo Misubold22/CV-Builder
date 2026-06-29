@@ -7,8 +7,12 @@ import { EmploymentHistory } from "./components/employment/EmploymentHistory.jsx
 import { EmploymentCard } from "./components/employment/EmploymentCard.jsx";
 import { EmploymentHistoryForm } from "./components/employment/EmploymentHistoryForm.jsx";
 import { EditEmploymentHistoryForm } from "./components/employment/EditEmploymentHistoryForm.jsx";
+import { SkillsHeader } from "./components/skills/SkillsHeader.jsx";
+import { SkillsHistory } from "./components/skills/SkillsHistory.jsx";
+import { SkillsForm } from "./components/skills/SkillsForm.jsx";
 import { ResumePreview } from "./components/preview/ResumePreview.jsx";
 import { ConvertToDisplayDate } from "./components/utils/dateUtils.js";
+import { motion } from "framer-motion";
 
 function EmploymentList({ jobs }) {
   const listItems = jobs.map((job) => (
@@ -26,6 +30,32 @@ function EmploymentList({ jobs }) {
   ));
 
   return <ul>{listItems}</ul>;
+}
+
+function SkillsList({ jobs }) {
+  const listItems = jobs.map((job) => (
+    <li key={job.id}>
+      <p className="date">Category : {job.category}</p>{" "}
+      <p className="date">Skill este: {job.skills}</p>{" "}
+    </li>
+  ));
+
+  return <ul>{listItems}</ul>;
+}
+
+export function SkillsLabels() {
+  return (
+    <>
+      <div className="header-container">
+        <div className="categories-container">
+          <h3 className="categoriesHeader">Categories:</h3>
+        </div>
+        <div className="skill-container">
+          <h3 className="skillsHeader">Skills:</h3>
+        </div>
+      </div>
+    </>
+  );
 }
 
 function App() {
@@ -46,6 +76,9 @@ function App() {
   const handleChange = () => {
     setIsHidden(!isHidden);
   };
+  //
+
+  //
 
   const [isEditHidden, setIsEditHidden] = useState(false);
 
@@ -113,6 +146,36 @@ function App() {
     );
   };
 
+  //
+
+  const pastSkills = [
+    {
+      id: 0,
+      category: "Programming Languages",
+      skills: "HTML, CSS, Javascript",
+    },
+    {
+      id: 1,
+      category: "Cloud services",
+      skills: "Amazon Web Services, Google Cloud Platform",
+    },
+  ];
+
+  const [skills, setSkills] = useState([...pastSkills]);
+
+  const [isSkillsFormHidden, setIsSkillsFormHidden] = useState(false);
+  const handleSklillsFormChange = () => {
+    setIsSkillsFormHidden(!isSkillsFormHidden);
+  };
+  const handleSkillsSubmit = (skill) => {
+    setSkills([...skills, skill]);
+    console.log(skills.map((skill) => skill.category));
+    console.log(skills.map((skill) => skill.skills));
+  };
+  //
+  const resumeCategory = skills.map((skill) => skill.category + " ");
+  const resumeSkills = skills.map((skill) => skill.skills + " ");
+
   return (
     <div className="split-container">
       <div className="split-left">
@@ -124,7 +187,7 @@ function App() {
           </form>
           <EmploymentHistory />
           {jobs.map((job) => (
-            <div key={job.id}>
+            <motion.div key={job.id}>
               <EmploymentCard
                 handleEditingJob={handleEditingJob}
                 handleJobDelete={handleJobDelete}
@@ -142,9 +205,8 @@ function App() {
                   setForm={setForm}
                 />
               )}
-            </div>
+            </motion.div>
           ))}
-
           {isHidden && (
             <EmploymentHistoryForm
               isHidden={!isHidden}
@@ -152,7 +214,6 @@ function App() {
               handleSubmit={handleSubmit}
             />
           )}
-
           <div
             className="btn-containter"
             style={{ display: isHidden ? "none" : "block" }}
@@ -161,6 +222,28 @@ function App() {
               className="custom-btn"
               label="Add Employment"
               onClick={handleChange}
+            />
+          </div>
+
+          <SkillsHeader />
+          <SkillsLabels />
+          <SkillsHistory skills={skills} setSkills={setSkills} />
+          {isSkillsFormHidden && (
+            <SkillsForm
+              isHidden={!isSkillsFormHidden}
+              setIsHidden={setIsSkillsFormHidden}
+              handleSubmit={handleSkillsSubmit}
+            />
+          )}
+
+          <div
+            className="btn-containter"
+            style={{ display: isSkillsFormHidden ? "none" : "block" }}
+          >
+            <CustomButton
+              className="custom-btn"
+              label="Add Skill"
+              onClick={handleSklillsFormChange}
             />
           </div>
         </div>
@@ -179,8 +262,12 @@ function App() {
           portfolio={inputs.portfolio}
           about={inputs.about}
           file={profilePreview}
+          category={resumeCategory}
+          skills={resumeSkills}
+
           //   {listItems};
         />
+        <EmploymentList jobs={jobs} />
         <EmploymentList jobs={jobs} />
 
         <p>

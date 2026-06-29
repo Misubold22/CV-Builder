@@ -11,6 +11,8 @@ export function ResumePreview(props) {
         <p>{props.linkedin}</p>
         <p>{props.portfolio}</p>
         <p>{props.about}</p>
+        <p>{props.category}</p>
+        <p>{props.skills}</p>
       </div>
       <div className="profile-picture">
         {" "}
