@@ -1,29 +1,5 @@
 import { DeleteButton, SkillDeleteButton } from "../common/IconButton.jsx";
-
 import { Fragment } from "react";
-function PersonalDetailsInputForm({
-  type,
-  id,
-  name,
-  value,
-  onChange,
-  placeholder,
-  autoComplete = "true",
-}) {
-  return (
-    <>
-      <input
-        type={type}
-        id={id}
-        name={name}
-        value={value}
-        onChange={onChange}
-        autoComplete={autoComplete}
-        placeholder={placeholder}
-      />
-    </>
-  );
-}
 
 export function SkillsCard({ skillsForm, handleJobDelete }) {
   console.log(skillsForm.category, skillsForm.skills);
@@ -76,9 +52,9 @@ export function SkillsHistory({ skills, setSkills }) {
         <Fragment key={skillData.id}>
           <div className="skills-container">
             <div className="skills-form-group">
-              <PersonalDetailsInputForm
+              <input
                 type="text"
-                id="category"
+                id={skillData.category}
                 name="category"
                 value={skillData.category}
                 onChange={(e) => handleCategoryChange(e, i)}
@@ -87,10 +63,10 @@ export function SkillsHistory({ skills, setSkills }) {
             </div>
 
             <div className="skills-form-group">
-              <PersonalDetailsInputForm
+              <input
                 type="text"
-                id="skills"
                 name="skills"
+                id={skillData.skills}
                 value={skillData.skills}
                 onChange={(e) => handleSkillsChange(e, i)}
                 placeholder="Enter your skills"

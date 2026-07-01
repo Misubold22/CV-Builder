@@ -1,6 +1,6 @@
 import { CustomButton } from "../common/CustomButton.jsx";
 
-export function EditEmploymentHistoryForm({
+export function EditEducationHistoryForm({
   isHidden,
   setIsHidden,
   handleSubmit,
@@ -8,17 +8,18 @@ export function EditEmploymentHistoryForm({
   form,
   setForm,
 }) {
+  console.log(editingJobId);
   const submitForm = (e) => {
-    if (!form.jobrole.trim() || !form.employer.trim()) return;
+    if (!form.school.trim() || !form.degree.trim()) return;
 
     e.preventDefault();
 
-    const newEducation = {
+    const newJob = {
       ...form,
       id: editingJobId,
     };
 
-    handleSubmit(newEducation);
+    handleSubmit(newJob);
     setIsHidden(isHidden);
   };
 
@@ -30,23 +31,23 @@ export function EditEmploymentHistoryForm({
       >
         <div className="form-row">
           <div className="form-group">
-            <label htmlFor="jobrole">Job Role:</label>
+            <label htmlFor="school">School / University:</label>
             <input
               type="text"
-              name="jobrole"
-              id="jobrole"
-              value={form.jobrole}
-              onChange={(e) => setForm({ ...form, jobrole: e.target.value })}
+              id="school"
+              name="school"
+              value={form.school}
+              onChange={(e) => setForm({ ...form, school: e.target.value })}
             />
           </div>
           <div className="form-group">
-            <label htmlFor="employer">Employer:</label>
+            <label htmlFor="degree">Dregree:</label>
             <input
               type="text"
-              name="employer"
-              id="employer"
-              value={form.employer}
-              onChange={(e) => setForm({ ...form, employer: e.target.value })}
+              id="degree"
+              name="degree"
+              value={form.degree}
+              onChange={(e) => setForm({ ...form, degree: e.target.value })}
             />
           </div>
         </div>
@@ -66,7 +67,6 @@ export function EditEmploymentHistoryForm({
 
           <div className="form-group">
             <label htmlFor="enddate">End Date:</label>
-
             <input
               id="enddate"
               type="date"
@@ -75,20 +75,30 @@ export function EditEmploymentHistoryForm({
               onChange={(e) => setForm({ ...form, endDate: e.target.value })}
             />
           </div>
+          <div className="form-group">
+            <label htmlFor="city">City:</label>
+
+            <input
+              id="city"
+              name="city"
+              type="text"
+              value={form.city}
+              onChange={(e) => setForm({ ...form, city: e.target.value })}
+            />
+          </div>
         </div>
         <div className="form-row">
           <div className="form-group">
-            <label htmlFor="description">Description</label>
-
+            <label htmlFor="educationDescription">Description</label>
             <textarea
-              id="description"
+              id="educationDescription"
+              name="educationDescription"
               type="text"
-              name=" jobDescription"
-              value={form.jobDescription}
+              value={form.educationDescription}
               onChange={(e) =>
-                setForm({ ...form, jobDescription: e.target.value })
+                setForm({ ...form, educationDescription: e.target.value })
               }
-              placeholder="I did a lot of things!"
+              placeholder="I' ve studied a lot of things!"
               rows={4}
             />
           </div>

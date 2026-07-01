@@ -101,10 +101,16 @@ body {
   gap: 20px;
   margin-bottom: 10px;
 }
-.form-group {
+.form-group,
+.language-form-group {
   flex: 1;
 }
-
+.language-form-group {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
 h1 {
   background: #385170;
   color: white;
@@ -216,7 +222,6 @@ input[id="category"],
 textarea {
   width: 100%;
   max-width: 100%;
-
   border: 2px solid #ddd;
   border-radius: 4px;
   color: #08060d;
@@ -224,16 +229,29 @@ textarea {
   font-size: clamp(12px, 1.5vw, 14px);
   background: #ececec;
   transition: border-color 0.3s;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 textarea {
   resize: none;
 }
-input[id="category"],
-input[id="skills"] {
+
+input[id="language"] {
+  width: 25%;
+  min-width: 130px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 7px;
+  padding-left: 2rem;
 }
+
+.enter-icon-wrapper {
+  color: #385170;
+  position: absolute;
+  padding-top: clamp(4px, 0.5vw, 6px);
+  padding-left: clamp(4px, 0.5vw, 5px);
+}
+
 .file {
   display: inline-block;
   color: #fff;

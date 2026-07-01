@@ -35,8 +35,6 @@ export function PersonalDetails({ inputs, setInputs }) {
 
   return (
     <>
-      <h2>Personal Details</h2>
-
       <div className="form-row">
         <div className="form-group">
           <label htmlFor="firstname">First name:</label>

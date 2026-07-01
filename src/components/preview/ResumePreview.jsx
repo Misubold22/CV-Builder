@@ -13,6 +13,7 @@ export function ResumePreview(props) {
         <p>{props.about}</p>
         <p>{props.category}</p>
         <p>{props.skills}</p>
+        <p>Languages:{props.languages}</p>
       </div>
       <div className="profile-picture">
         {" "}

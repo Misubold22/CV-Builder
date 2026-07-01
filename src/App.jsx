@@ -1,15 +1,18 @@
 import "./App.css";
 import { useState } from "react";
 import { CustomButton } from "./components/common/CustomButton.jsx";
+import { SectionHeader } from "./components/common/SectionHeader.jsx";
 import { ProfilePicture } from "./components/personal/ProfilePicture.jsx";
 import { PersonalDetails } from "./components/personal/PersonalDetails.jsx";
-import { EmploymentHistory } from "./components/employment/EmploymentHistory.jsx";
 import { EmploymentCard } from "./components/employment/EmploymentCard.jsx";
 import { EmploymentHistoryForm } from "./components/employment/EmploymentHistoryForm.jsx";
 import { EditEmploymentHistoryForm } from "./components/employment/EditEmploymentHistoryForm.jsx";
-import { SkillsHeader } from "./components/skills/SkillsHeader.jsx";
 import { SkillsHistory } from "./components/skills/SkillsHistory.jsx";
 import { SkillsForm } from "./components/skills/SkillsForm.jsx";
+import { EditEducationHistoryForm } from "./components/education/EditEducationHistoryForm.jsx";
+import { EducationHistoryForm } from "./components/education/EducationHistoryForm.jsx";
+import { EducationCard } from "./components/education/EducationCard.jsx";
+import { LanguageForm } from "./components/languages/LanguageForm.jsx";
 import { ResumePreview } from "./components/preview/ResumePreview.jsx";
 import { ConvertToDisplayDate } from "./components/utils/dateUtils.js";
 import { motion } from "framer-motion";
@@ -32,8 +35,18 @@ function EmploymentList({ jobs }) {
   return <ul>{listItems}</ul>;
 }
 
-function SkillsList({ jobs }) {
-  const listItems = jobs.map((job) => (
+function LanguagesList({ jobs }) {
+  const listItems = jobs.map((l) => (
+    <li key={l.id}>
+      <p className="date">Language : {l.language}</p>{" "}
+    </li>
+  ));
+
+  return <ul>{listItems}</ul>;
+}
+
+function SkillsList({ languages }) {
+  const listItems = languages.map((job) => (
     <li key={job.id}>
       <p className="date">Category : {job.category}</p>{" "}
       <p className="date">Skill este: {job.skills}</p>{" "}
@@ -176,16 +189,137 @@ function App() {
   const resumeCategory = skills.map((skill) => skill.category + " ");
   const resumeSkills = skills.map((skill) => skill.skills + " ");
 
+  //
+  const [isEduFormHidden, setIsEduFormHidden] = useState(false);
+  const handleValueChange = () => {
+    setIsEduFormHidden(!isEduFormHidden);
+  };
+  //
+
+  const [isEduEditHidden, setIsEduEditHidden] = useState(false);
+
+  const pastEducation = [
+    {
+      id: 0,
+      school: "University of California",
+      degree: "Bsc. Computer Science",
+      startDate: "2018-10-01",
+      endDate: "2021-07-15",
+      city: "Berkeley, California",
+      educationDescription:
+        "Specialized in software engineering and cloud computing, with research focused on scalable web applications and distributed systems.",
+    },
+    {
+      id: 1,
+      school: "University of California",
+      degree: "MSc. Computer Science",
+      startDate: "2021-10-01",
+      endDate: "2023-07-15",
+      city: "Berkeley, California",
+      educationDescription:
+        "Completed advanced coursework in software engineering, distributed systems, and machine learning. Conducted research on scalable web applications and developed a thesis project focused on cloud-native application architectures.",
+    },
+  ];
+
+  const [education, setEducation] = useState(pastEducation);
+
+  const handleEducationSubmit = (ed) => {
+    setEducation([...education, ed]);
+  };
+
+  const [editingEducation, setEditingEducation] = useState(null);
+  const [editingEducationId, setEducationId] = useState(null);
+
+  const [educationForm, setEducationForm] = useState({
+    school: "",
+    degree: "",
+    startDate: "",
+    endDate: "",
+    city: "",
+    educationDescription: "",
+  });
+
+  function handleEducationEdit(id) {
+    const foundEducation = education.find((j) => j.id === id);
+    setIsEduEditHidden(!isEduEditHidden);
+    setEducationForm(foundEducation);
+    setEditingEducation(id);
+    setEducationId(id);
+  }
+
+  const handleEducationDelete = (id) => {
+    const updatedEduList = education.filter((job) => job.id !== id);
+
+    setEducation(updatedEduList);
+  };
+
+  const handleEducationEditSubmit = (job) => {
+    setEducation(
+      education.map((t) => {
+        if (t.id === job.id) {
+          return job;
+        } else {
+          return t;
+        }
+      }),
+    );
+  };
+
+  //
+
+  const pastLanguages = [
+    {
+      id: 0,
+      language: "english",
+    },
+    {
+      id: 1,
+      language: "french",
+    },
+
+    {
+      id: 2,
+      language: "spanish",
+    },
+  ];
+
+  const [newLanguage, setNewLanguage] = useState(pastLanguages);
+
+  const handleLanguageSubmit = (language) => {
+    setNewLanguage([...newLanguage, language]);
+  };
+
+  const handleLanguageDelete = (id) => {
+    const updatedLanguageList = newLanguage.filter(
+      (language) => language.id !== id,
+    );
+
+    setNewLanguage(updatedLanguageList);
+  };
+
+  const LanguageButton = ({ handleLanguageDelete, lang }) => {
+    return (
+      <button
+        className="language-delete-btn"
+        key={lang.id}
+        onClick={() => handleLanguageDelete(lang.id)}
+      >
+        {lang.language}
+      </button>
+    );
+  };
+
   return (
     <div className="split-container">
       <div className="split-left">
         <div className="left-wrapper">
           <h1>Resume builder</h1>
           <form className="responsive-form">
+            <SectionHeader title="Personal Details" />
             <PersonalDetails inputs={inputs} setInputs={setInputs} />
             <ProfilePicture setProfilePreview={setProfilePreview} />
           </form>
-          <EmploymentHistory />
+          <SectionHeader title="Employment History " />
           {jobs.map((job) => (
             <motion.div key={job.id}>
               <EmploymentCard
@@ -224,8 +358,7 @@ function App() {
               onClick={handleChange}
             />
           </div>
-
-          <SkillsHeader />
+          <SectionHeader title="Skills" />
           <SkillsLabels />
           <SkillsHistory skills={skills} setSkills={setSkills} />
           {isSkillsFormHidden && (
@@ -235,7 +368,6 @@ function App() {
               handleSubmit={handleSkillsSubmit}
             />
           )}
-
           <div
             className="btn-containter"
             style={{ display: isSkillsFormHidden ? "none" : "block" }}
@@ -246,6 +378,55 @@ function App() {
               onClick={handleSklillsFormChange}
             />
           </div>
+          <SectionHeader title="Education " />
+          {education.map((study) => (
+            <motion.div key={study.id}>
+              <EducationCard
+                handleEditingJob={handleEducationEdit}
+                handleJobDelete={handleEducationDelete}
+                person={study}
+              />
+
+              {editingEducationId === study.id && (
+                <EditEducationHistoryForm
+                  isHidden={!isEduEditHidden}
+                  setIsHidden={setIsEduEditHidden}
+                  handleSubmit={handleEducationEditSubmit}
+                  editingJobId={editingEducation}
+                  jobs={education}
+                  form={educationForm}
+                  setForm={setEducationForm}
+                />
+              )}
+            </motion.div>
+          ))}
+          {isEduFormHidden && (
+            <EducationHistoryForm
+              isHidden={!isEduFormHidden}
+              setIsHidden={setIsEduFormHidden}
+              handleSubmit={handleEducationSubmit}
+            />
+          )}
+          <div
+            className="btn-containter"
+            style={{ display: isEduFormHidden ? "none" : "block" }}
+          >
+            <CustomButton
+              className="custom-btn"
+              label="Add Education"
+              onClick={handleValueChange}
+            />
+          </div>{" "}
+          <SectionHeader title="Languages" />
+          <LanguageForm handleSubmit={handleLanguageSubmit} />
+          {newLanguage.map((lang) => (
+            <div key={lang.id}>
+              <LanguageButton
+                handleLanguageDelete={handleLanguageDelete}
+                lang={lang}
+              />
+            </div>
+          ))}
         </div>
       </div>
 
@@ -268,7 +449,9 @@ function App() {
           //   {listItems};
         />
         <EmploymentList jobs={jobs} />
-        <EmploymentList jobs={jobs} />
+        <LanguagesList jobs={newLanguage} />
+
+        {/*   <SkillsList jobs={skills} /> */}
 
         <p>
           This is the right side of the split layout.
