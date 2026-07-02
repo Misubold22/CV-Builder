@@ -223,7 +223,7 @@ textarea {
   width: 100%;
   max-width: 100%;
   border: 2px solid #ddd;
-  border-radius: 4px;
+  border-radius: 8px;
   color: #08060d;
   padding: clamp(4px, 1.5vw, 8px);
   font-size: clamp(12px, 1.5vw, 14px);
@@ -241,7 +241,7 @@ input[id="language"] {
   min-width: 130px;
   box-sizing: border-box;
   border: 2px solid #ccc;
-  border-radius: 7px;
+  border-radius: 8px;
   padding-left: 2rem;
 }
 
@@ -255,16 +255,16 @@ input[id="language"] {
 .file {
   display: inline-block;
   color: #fff;
-  padding: 5px 20px;
+  padding: 3px 10px;
   font-size: clamp(12px, 1.5vw, 14px);
-  border-radius: 3px;
+
   background: #385170;
   transition: background-color 0.2s ease;
   text-wrap: wrap;
-
   font-weight: lighter;
   cursor: pointer;
   box-shadow: 1px 1px 5px 0 rgba(16, 16, 16, 0.5);
+  border-radius: 8px;
 }
 
 label[for="profilePicture"] {
@@ -320,11 +320,12 @@ input[type="file"]:hover {
 
 .custom-btn,
 .submit-btn,
-.cancel-btn {
+.cancel-btn,
+.language-delete-btn {
   color: #fff;
-  padding: 10px 15px;
+
   font-size: clamp(12px, 1.5vw, 14px);
-  border-radius: 5px;
+  border-radius: 8px;
   background-color: #385170;
   display: inline-block;
   text-wrap: wrap;
@@ -332,9 +333,20 @@ input[type="file"]:hover {
   font-weight: lighter;
   cursor: pointer;
   border: none; /* ← important */
-  transition: background-color 0.2s ease;
+
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+  padding: 8px 13px;
 }
 
+.language-delete-btn {
+  padding: 7px 13px;
+}
+.language-delete-btn:hover {
+  background: #f44336;
+  color: white;
+}
 .custom-btn:hover {
   background: #4a678d;
 }
@@ -364,13 +376,18 @@ input[type="file"]:hover {
   background-color: #f55a4e;
 }
 
-.submitBtn-containter {
+.submitBtn-containter,
+.languageBtn-containter {
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
   gap: 0.3rem;
 
   padding-bottom: clamp(0.5rem, 1.5vw, 1rem);
+}
+
+.languageBtn-containter {
+  padding-top: clamp(0.2rem, 1.5vw, 0.5rem);
 }
 
 /* .date-container {
@@ -409,7 +426,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:before {
 }
 
 .card {
-  border-radius: 9px;
+  border-radius: 8px;
   background: #f5f5f5;
   position: relative;
   padding-left: clamp(4px, 1.5vw, 8px);
@@ -452,7 +469,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:before {
   color: #385170;
 
   font-size: 22px;
-  border-radius: 5px;
+  border-radius: 8px;
 
   text-wrap: wrap;
 

@@ -13,9 +13,12 @@ import { EditEducationHistoryForm } from "./components/education/EditEducationHi
 import { EducationHistoryForm } from "./components/education/EducationHistoryForm.jsx";
 import { EducationCard } from "./components/education/EducationCard.jsx";
 import { LanguageForm } from "./components/languages/LanguageForm.jsx";
+import { LanguageCard } from "./components/languages/LanguageCard.jsx";
 import { ResumePreview } from "./components/preview/ResumePreview.jsx";
 import { ConvertToDisplayDate } from "./components/utils/dateUtils.js";
 import { motion } from "framer-motion";
+import { usePDF } from "react-to-pdf";
+import generatePDF, { Resolution, Margin } from "react-to-pdf";
 
 function EmploymentList({ jobs }) {
   const listItems = jobs.map((job) => (
@@ -36,9 +39,10 @@ function EmploymentList({ jobs }) {
 }
 
 function LanguagesList({ jobs }) {
+  const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
   const listItems = jobs.map((l) => (
     <li key={l.id}>
-      <p className="date">Language : {l.language}</p>{" "}
+      <p className="date">Language : {capitalize(l.language)}</p>{" "}
     </li>
   ));
 
@@ -297,17 +301,15 @@ function App() {
     setNewLanguage(updatedLanguageList);
   };
 
-  const LanguageButton = ({ handleLanguageDelete, lang }) => {
-    return (
-      <button
-        className="language-delete-btn"
-        key={lang.id}
-        onClick={() => handleLanguageDelete(lang.id)}
-      >
-        {lang.language}
-      </button>
-    );
-  };
+  const { toPDF, targetRef } = usePDF({
+    filename: "simple-CV.pdf",
+    method: "open",
+
+    resolution: Resolution.MEDIUM,
+    format: "A4",
+
+    orientation: "portrait",
+  });
 
   return (
     <div className="split-container">
@@ -419,45 +421,67 @@ function App() {
           </div>{" "}
           <SectionHeader title="Languages" />
           <LanguageForm handleSubmit={handleLanguageSubmit} />
-          {newLanguage.map((lang) => (
-            <div key={lang.id}>
-              <LanguageButton
-                handleLanguageDelete={handleLanguageDelete}
-                lang={lang}
-              />
-            </div>
-          ))}
+          <div className="languageBtn-containter">
+            {newLanguage.map((lang) => (
+              <div key={lang.id}>
+                <LanguageCard
+                  handleLanguageDelete={handleLanguageDelete}
+                  lang={lang}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
       <div className="split-right">
+        <button onClick={() => toPDF()}>Download ASTA PDF</button>
         <h1>Right Section</h1>
-        <ResumePreview
-          firstname={inputs.firstname}
-          lastname={inputs.lastname}
-          phone={inputs.phone}
-          email={inputs.email}
-          address={inputs.address}
-          occupation={inputs.occupation}
-          linkedin={inputs.linkedin}
-          portfolio={inputs.portfolio}
-          about={inputs.about}
-          file={profilePreview}
-          category={resumeCategory}
-          skills={resumeSkills}
+        <div
+          id="content-id"
+          ref={targetRef}
+          style={{
+            padding: "20px",
+          }}
+        >
+          <ResumePreview
+            firstname={inputs.firstname}
+            lastname={inputs.lastname}
+            phone={inputs.phone}
+            email={inputs.email}
+            address={inputs.address}
+            occupation={inputs.occupation}
+            linkedin={inputs.linkedin}
+            portfolio={inputs.portfolio}
+            about={inputs.about}
+            file={profilePreview}
+            category={resumeCategory}
+            skills={resumeSkills}
 
-          //   {listItems};
-        />
-        <EmploymentList jobs={jobs} />
-        <LanguagesList jobs={newLanguage} />
-
-        {/*   <SkillsList jobs={skills} /> */}
-
+            //   {listItems};
+          />
+          {/*   <SkillsList jobs={skills} /> 
+        
+        <Component2PDF language={<LanguagesList jobs={newLanguage} />} />
+        
+        */}
+          {/* The content to be exported into the PDF.        <div
+          ref={targetRef}
+          style={{
+            padding: "20px",
+          }}
+        >
+          <EmploymentList jobs={jobs} />
+          <LanguagesList jobs={newLanguage} />
+        </div> */}
+          <EmploymentList jobs={jobs} />
+          <LanguagesList jobs={newLanguage} />
+        </div>
         <p>
           This is the right side of the split layout.
           <br />
           can add content here.
-        </p>
+        </p>{" "}
       </div>
     </div>
   );
