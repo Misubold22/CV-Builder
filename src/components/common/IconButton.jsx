@@ -1,5 +1,6 @@
 import { MdDelete } from "react-icons/md";
 import { MdEdit } from "react-icons/md";
+import { IoMdDownload } from "react-icons/io";
 
 export const EditButton = ({ onClick, label }) => {
   return (
@@ -23,6 +24,15 @@ export const SkillDeleteButton = ({ onClick, label }) => {
   return (
     <button className="skill-delete-btn" onClick={onClick}>
       <MdDelete />
+      {label}
+    </button>
+  );
+};
+
+export const DownloadCVButton = ({ onClick, label }) => {
+  return (
+    <button className="no-print" onClick={onClick}>
+      <IoMdDownload />
       {label}
     </button>
   );

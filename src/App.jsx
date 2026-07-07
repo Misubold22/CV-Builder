@@ -19,6 +19,9 @@ import { ConvertToDisplayDate } from "./components/utils/dateUtils.js";
 import { motion } from "framer-motion";
 import { usePDF } from "react-to-pdf";
 import generatePDF, { Resolution, Margin } from "react-to-pdf";
+import { useReactToPrint } from "react-to-print";
+import { useRef } from "react";
+import { DownloadCVButton } from "./components/common/IconButton.jsx";
 
 function EmploymentList({ jobs }) {
   const listItems = jobs.map((job) => (
@@ -94,7 +97,10 @@ function App() {
     setIsHidden(!isHidden);
   };
   //
-
+  // const handlePrint = () => window.print();
+  //const btnPrint = document.getElementById("print");
+  //console.log(btnPrint);
+  // (onClick='handlePrint()')
   //
 
   const [isEditHidden, setIsEditHidden] = useState(false);
@@ -307,8 +313,15 @@ function App() {
 
     resolution: Resolution.MEDIUM,
     format: "A4",
-
+    //format: "letter",
     orientation: "portrait",
+    //orientation: "landscape",
+  });
+
+  const componentRef = useRef(null);
+
+  const handlePrint = useReactToPrint({
+    contentRef: componentRef,
   });
 
   return (
@@ -434,54 +447,45 @@ function App() {
         </div>
       </div>
 
-      <div className="split-right">
-        <button onClick={() => toPDF()}>Download ASTA PDF</button>
-        <h1>Right Section</h1>
-        <div
-          id="content-id"
-          ref={targetRef}
-          style={{
-            padding: "20px",
-          }}
-        >
-          <ResumePreview
-            firstname={inputs.firstname}
-            lastname={inputs.lastname}
-            phone={inputs.phone}
-            email={inputs.email}
-            address={inputs.address}
-            occupation={inputs.occupation}
-            linkedin={inputs.linkedin}
-            portfolio={inputs.portfolio}
-            about={inputs.about}
-            file={profilePreview}
-            category={resumeCategory}
-            skills={resumeSkills}
+      <div className="split-right" ref={componentRef}>
+        <div className="left-sidebar-flexbox">
+          <aside className="resume-sidebar">
+            <figure className="profile-picture">
+              {" "}
+              {profilePreview && (
+                <img
+                  src={profilePreview}
+                  alt="profile preview"
+                  className="profile-preview"
+                />
+              )}
+            </figure>{" "}
+            <section className="contact-section">
+              <h2 className="contact-header">Contact</h2>
 
-            //   {listItems};
-          />
-          {/*   <SkillsList jobs={skills} /> 
-        
-        <Component2PDF language={<LanguagesList jobs={newLanguage} />} />
-        
-        */}
-          {/* The content to be exported into the PDF.        <div
-          ref={targetRef}
-          style={{
-            padding: "20px",
-          }}
-        >
-          <EmploymentList jobs={jobs} />
-          <LanguagesList jobs={newLanguage} />
-        </div> */}
-          <EmploymentList jobs={jobs} />
-          <LanguagesList jobs={newLanguage} />
+              <address>
+                <p className="sidebar-paragraph">Kaohsiung, Taiwannnnnnn</p>
+                <p className="sidebar-paragraph">(+886) 888-888-888777777</p>
+                <p className="sidebar-paragraph">{inputs.email}</p>
+                <p className="sidebar-paragraph">LinkedIn</p>
+                <p className="sidebar-paragraph">Portfolio</p>
+              </address>
+            </section>
+            <section className="language-section">
+              <h2 className="contact-header">Languages</h2>
+              <p className="sidebar-paragraph">Language1</p>
+              <p className="sidebar-paragraph">Language2</p>
+              <p className="sidebar-paragraph">Language3</p>
+            </section>
+          </aside>
+          <main className="main-content">
+            {" "}
+            <div className="downloadBtn-container">
+              <DownloadCVButton onClick={handlePrint} />
+            </div>{" "}
+            MAIN SECTION
+          </main>
         </div>
-        <p>
-          This is the right side of the split layout.
-          <br />
-          can add content here.
-        </p>{" "}
       </div>
     </div>
   );
