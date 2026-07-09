@@ -18,10 +18,15 @@ import { ResumePreview } from "./components/preview/ResumePreview.jsx";
 import { ConvertToDisplayDate } from "./components/utils/dateUtils.js";
 import { motion } from "framer-motion";
 import { usePDF } from "react-to-pdf";
-import generatePDF, { Resolution, Margin } from "react-to-pdf";
+
 import { useReactToPrint } from "react-to-print";
 import { useRef } from "react";
 import { DownloadCVButton } from "./components/common/IconButton.jsx";
+import { FaPhoneAlt } from "react-icons/fa";
+import { FaLocationDot } from "react-icons/fa6";
+import { SiMinutemailer } from "react-icons/si";
+import { ImLinkedin } from "react-icons/im";
+import { FaGithub } from "react-icons/fa";
 
 function EmploymentList({ jobs }) {
   const listItems = jobs.map((job) => (
@@ -45,7 +50,7 @@ function LanguagesList({ jobs }) {
   const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
   const listItems = jobs.map((l) => (
     <li key={l.id}>
-      <p className="date">Language : {capitalize(l.language)}</p>{" "}
+      <p className="sidebar-paragraph"> {capitalize(l.language)}</p>{" "}
     </li>
   ));
 
@@ -80,15 +85,16 @@ export function SkillsLabels() {
 
 function App() {
   const [inputs, setInputs] = useState({
-    firstname: "",
-    lastname: "",
-    phone: "",
-    email: "",
-    address: "",
-    occupation: "",
-    linkedin: "",
-    portfolio: "",
-    about: "",
+    firstname: "Lukas",
+    lastname: "Meyerhoffer",
+    phone: "+49 151 2345 6789",
+    email: "lukas.meyer.dev@example.com",
+    address: "Munich, Germany",
+    occupation: "Frontend Developer",
+    linkedin: "linkedin.com/in/lukas-meyer-dev",
+    portfolio: "github.com/lukasmeyerdev",
+    about:
+      "Frontend Developer with 4 years of experience building responsive, accessible, and high-performance web applications. Experienced with React, JavaScript, TypeScript, HTML, and CSS, with a strong focus on clean code, component-based architecture, and intuitive user interfaces. Passionate about creating polished user experiences and continuously learning modern web technologies.",
   });
 
   const [profilePreview, setProfilePreview] = useState(null);
@@ -307,17 +313,6 @@ function App() {
     setNewLanguage(updatedLanguageList);
   };
 
-  const { toPDF, targetRef } = usePDF({
-    filename: "simple-CV.pdf",
-    method: "open",
-
-    resolution: Resolution.MEDIUM,
-    format: "A4",
-    //format: "letter",
-    orientation: "portrait",
-    //orientation: "landscape",
-  });
-
   const componentRef = useRef(null);
 
   const handlePrint = useReactToPrint({
@@ -328,7 +323,7 @@ function App() {
     <div className="split-container">
       <div className="split-left">
         <div className="left-wrapper">
-          <h1>Resume builder</h1>
+          <h1 className="resume-builder-header">Resume builder</h1>
           <form className="responsive-form">
             <SectionHeader title="Personal Details" />
             <PersonalDetails inputs={inputs} setInputs={setInputs} />
@@ -447,8 +442,8 @@ function App() {
         </div>
       </div>
 
-      <div className="split-right" ref={componentRef}>
-        <div className="left-sidebar-flexbox">
+      <div className="split-right">
+        <div className="resume-layout" ref={componentRef}>
           <aside className="resume-sidebar">
             <figure className="profile-picture">
               {" "}
@@ -461,29 +456,74 @@ function App() {
               )}
             </figure>{" "}
             <section className="contact-section">
-              <h2 className="contact-header">Contact</h2>
-
+              <h2 className="contact-header"> Contact</h2>
               <address>
-                <p className="sidebar-paragraph">Kaohsiung, Taiwannnnnnn</p>
-                <p className="sidebar-paragraph">(+886) 888-888-888777777</p>
+                <p className="sidebar-title">
+                  {" "}
+                  <FaLocationDot /> Address
+                </p>
+                <p className="sidebar-paragraph">{inputs.address}</p>
+
+                <p className="sidebar-title">
+                  {" "}
+                  <FaPhoneAlt /> Phone
+                </p>
+                <p className="sidebar-paragraph">{inputs.phone}</p>
+
+                <p className="sidebar-title">
+                  {" "}
+                  <SiMinutemailer /> Email
+                </p>
                 <p className="sidebar-paragraph">{inputs.email}</p>
-                <p className="sidebar-paragraph">LinkedIn</p>
-                <p className="sidebar-paragraph">Portfolio</p>
+
+                <p className="sidebar-title">
+                  {" "}
+                  <ImLinkedin /> Linkedin
+                </p>
+                <p className="sidebar-paragraph">{inputs.linkedin}</p>
+
+                <p className="sidebar-title">
+                  {" "}
+                  <FaGithub /> Portfolio
+                </p>
+                <p className="sidebar-paragraph">{inputs.portfolio}</p>
               </address>
             </section>
             <section className="language-section">
               <h2 className="contact-header">Languages</h2>
               <p className="sidebar-paragraph">Language1</p>
-              <p className="sidebar-paragraph">Language2</p>
-              <p className="sidebar-paragraph">Language3</p>
+              <LanguagesList jobs={newLanguage} />
             </section>
           </aside>
-          <main className="main-content">
+          <main className="resume-content">
             {" "}
             <div className="downloadBtn-container">
               <DownloadCVButton onClick={handlePrint} />
             </div>{" "}
-            MAIN SECTION
+            <h1 className="profile-header">
+              {inputs.firstname} {inputs.lastname}
+            </h1>
+            <h2 className="occupation-header">{inputs.occupation}</h2>
+            <p className="profile-summary">{inputs.about}</p>
+            <SectionHeader headerClassName="main-header" title="Employment" />
+            <div className="detail-content">
+              <div className="timeline-block">
+                <h3>Department of Computer Science</h3>
+                <p className="timeline-p">
+                  National Tsing Hua University, Taiwan
+                </p>
+                <time>2015 - 2019</time>
+              </div>
+              <div className="timeline-block">
+                <div className="timeline-card">
+                  <h3>Institute of Computer Science and Engineering</h3>
+                  <p className="timeline-p">
+                    National Chiao Tung University, Taiwan
+                  </p>
+                  <time>2020 - present</time>
+                </div>
+              </div>
+            </div>
           </main>
         </div>
       </div>
