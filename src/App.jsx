@@ -14,11 +14,8 @@ import { EducationHistoryForm } from "./components/education/EducationHistoryFor
 import { EducationCard } from "./components/education/EducationCard.jsx";
 import { LanguageForm } from "./components/languages/LanguageForm.jsx";
 import { LanguageCard } from "./components/languages/LanguageCard.jsx";
-import { ResumePreview } from "./components/preview/ResumePreview.jsx";
 import { ConvertToDisplayDate } from "./components/utils/dateUtils.js";
 import { motion } from "framer-motion";
-import { usePDF } from "react-to-pdf";
-
 import { useReactToPrint } from "react-to-print";
 import { useRef } from "react";
 import { DownloadCVButton } from "./components/common/IconButton.jsx";
@@ -31,15 +28,58 @@ import { FaGithub } from "react-icons/fa";
 function EmploymentList({ jobs }) {
   const listItems = jobs.map((job) => (
     <li key={job.id}>
-      <p className="date">Job este: {job.jobrole}</p>{" "}
-      <p className="date">Employer este: {job.employer}</p>{" "}
-      <p className="date">
-        {" "}
-        {ConvertToDisplayDate(job.startDate)} -
-        {ConvertToDisplayDate(job.endDate)}
-      </p>{" "}
-      <p className="date">ID este: {job.id}</p>{" "}
-      <p className="date">Description: {job.jobDescription}</p>{" "}
+      <div className="timeline-block">
+        <div className="time-container">
+          <h3 className="section-title">{job.jobrole}</h3>
+          <time>
+            {" "}
+            {ConvertToDisplayDate(job.startDate)} -
+            {ConvertToDisplayDate(job.endDate)}
+          </time>
+        </div>
+        <h4>{job.employer}</h4>
+        <p className="timeline-p"> {job.jobDescription}</p>{" "}
+      </div>
+    </li>
+  ));
+
+  return <ul>{listItems}</ul>;
+}
+
+function EducationList({ education }) {
+  const listItems = education.map((edu) => (
+    <li key={edu.id}>
+      <div className="timeline-block">
+        <div className="time-container">
+          <h3 className="section-title">{edu.school}</h3>
+          <time>
+            {" "}
+            {ConvertToDisplayDate(edu.startDate)} -
+            {ConvertToDisplayDate(edu.endDate)}
+          </time>
+        </div>
+        <div className="university-container">
+          <h4>
+            {edu.city} - {edu.degree}
+          </h4>
+        </div>
+        <p className="timeline-p"> {edu.educationDescription}</p>{" "}
+      </div>
+    </li>
+  ));
+
+  return <ul>{listItems}</ul>;
+}
+
+function SkillsList({ languages }) {
+  const listItems = languages.map((job) => (
+    <li key={job.id}>
+      <div className="timeline-block">
+        <div className="time-container">
+          <h5>{job.category}</h5>
+          <h5 className="userSkillsHeader">{job.skills}</h5>
+        </div>
+      </div>
     </li>
   ));
 
@@ -51,17 +91,6 @@ function LanguagesList({ jobs }) {
   const listItems = jobs.map((l) => (
     <li key={l.id}>
       <p className="sidebar-paragraph"> {capitalize(l.language)}</p>{" "}
-    </li>
-  ));
-
-  return <ul>{listItems}</ul>;
-}
-
-function SkillsList({ languages }) {
-  const listItems = languages.map((job) => (
-    <li key={job.id}>
-      <p className="date">Category : {job.category}</p>{" "}
-      <p className="date">Skill este: {job.skills}</p>{" "}
     </li>
   ));
 
@@ -102,33 +131,29 @@ function App() {
   const handleChange = () => {
     setIsHidden(!isHidden);
   };
-  //
-  // const handlePrint = () => window.print();
-  //const btnPrint = document.getElementById("print");
-  //console.log(btnPrint);
-  // (onClick='handlePrint()')
-  //
 
   const [isEditHidden, setIsEditHidden] = useState(false);
 
   const pastJobs = [
     {
       id: 0,
-      jobrole: "Web Developer",
-      employer: "Startup Inc.",
-      startDate: "2021-06-05",
-      endDate: "2024-03-15",
+      jobrole: "Junior Frontend Developer",
+      employer: "NordSoft Solutions GmbH",
+      startDate: "2020-07-01",
+      endDate: "2022-05-31",
+      city: "Munich, Germany",
       jobDescription:
-        "Designed and developed responsive websites and web applications using HTML, CSS, JavaScript, and React.js. Implemented backend functionality using Python and Django. Collaborated with designers and project managers to ensure on-time delivery of projects.",
+        "Developed and maintained responsive user interfaces using HTML, CSS, JavaScript, and React. Worked closely with senior developers to implement new features, fixed UI bugs and improved website accessibility.",
     },
     {
       id: 1,
-      jobrole: "Junior Web Developer ",
-      employer: "Acme Inc.",
-      startDate: "2024-06-05",
+      jobrole: "Frontend Developer",
+      employer: "TechVision Europe GmbH",
+      startDate: "2022-06-01",
       endDate: "2026-03-15",
+      city: "Berlin, Germany",
       jobDescription:
-        "Developed and maintained web applications using HTML, CSS, and JavaScript. Troubleshooted and resolved bugs to ensure smooth website operation.",
+        "Developed scalable web applications with React, TypeScript, and modern CSS. Collaborated with designers and backend developers to deliver accessible, high-performance solutions.",
     },
   ];
 
@@ -186,7 +211,7 @@ function App() {
     {
       id: 1,
       category: "Cloud services",
-      skills: "Amazon Web Services, Google Cloud Platform",
+      skills: "AWS, Google Cloud",
     },
   ];
 
@@ -217,23 +242,23 @@ function App() {
   const pastEducation = [
     {
       id: 0,
-      school: "University of California",
-      degree: "Bsc. Computer Science",
-      startDate: "2018-10-01",
+      school: "Technical University of Munich",
+      degree: "BSc. Computer Science",
+      startDate: "2017-10-01",
       endDate: "2021-07-15",
-      city: "Berkeley, California",
+      city: "Munich, Germany",
       educationDescription:
-        "Specialized in software engineering and cloud computing, with research focused on scalable web applications and distributed systems.",
+        "Built a strong foundation in software engineering, algorithms, data structures, and web technologies. Completed multiple team projects developing responsive web applications using JavaScript and React.",
     },
     {
       id: 1,
-      school: "University of California",
+      school: "Technical University of Munich",
       degree: "MSc. Computer Science",
       startDate: "2021-10-01",
       endDate: "2023-07-15",
-      city: "Berkeley, California",
+      city: "Munich, Germany",
       educationDescription:
-        "Completed advanced coursework in software engineering, distributed systems, and machine learning. Conducted research on scalable web applications and developed a thesis project focused on cloud-native application architectures.",
+        "Specialized in distributed systems, cloud computing, and modern web application architecture. Completed a master's thesis on scalable cloud-native frontend applications and their performance optimization.",
     },
   ];
 
@@ -286,15 +311,20 @@ function App() {
   const pastLanguages = [
     {
       id: 0,
+      language: "german",
+    },
+
+    {
+      id: 1,
       language: "english",
     },
     {
-      id: 1,
+      id: 2,
       language: "french",
     },
 
     {
-      id: 2,
+      id: 3,
       language: "spanish",
     },
   ];
@@ -368,26 +398,6 @@ function App() {
               onClick={handleChange}
             />
           </div>
-          <SectionHeader title="Skills" />
-          <SkillsLabels />
-          <SkillsHistory skills={skills} setSkills={setSkills} />
-          {isSkillsFormHidden && (
-            <SkillsForm
-              isHidden={!isSkillsFormHidden}
-              setIsHidden={setIsSkillsFormHidden}
-              handleSubmit={handleSkillsSubmit}
-            />
-          )}
-          <div
-            className="btn-containter"
-            style={{ display: isSkillsFormHidden ? "none" : "block" }}
-          >
-            <CustomButton
-              className="custom-btn"
-              label="Add Skill"
-              onClick={handleSklillsFormChange}
-            />
-          </div>
           <SectionHeader title="Education " />
           {education.map((study) => (
             <motion.div key={study.id}>
@@ -427,6 +437,26 @@ function App() {
               onClick={handleValueChange}
             />
           </div>{" "}
+          <SectionHeader title="Skills" />
+          <SkillsLabels />
+          <SkillsHistory skills={skills} setSkills={setSkills} />
+          {isSkillsFormHidden && (
+            <SkillsForm
+              isHidden={!isSkillsFormHidden}
+              setIsHidden={setIsSkillsFormHidden}
+              handleSubmit={handleSkillsSubmit}
+            />
+          )}
+          <div
+            className="skills-btn-containter"
+            style={{ display: isSkillsFormHidden ? "none" : "block" }}
+          >
+            <CustomButton
+              className="custom-btn"
+              label="Add Skill"
+              onClick={handleSklillsFormChange}
+            />
+          </div>
           <SectionHeader title="Languages" />
           <LanguageForm handleSubmit={handleLanguageSubmit} />
           <div className="languageBtn-containter">
@@ -491,7 +521,7 @@ function App() {
             </section>
             <section className="language-section">
               <h2 className="contact-header">Languages</h2>
-              <p className="sidebar-paragraph">Language1</p>
+
               <LanguagesList jobs={newLanguage} />
             </section>
           </aside>
@@ -506,24 +536,17 @@ function App() {
             <h2 className="occupation-header">{inputs.occupation}</h2>
             <p className="profile-summary">{inputs.about}</p>
             <SectionHeader headerClassName="main-header" title="Employment" />
-            <div className="detail-content">
-              <div className="timeline-block">
-                <h3>Department of Computer Science</h3>
-                <p className="timeline-p">
-                  National Tsing Hua University, Taiwan
-                </p>
-                <time>2015 - 2019</time>
-              </div>
-              <div className="timeline-block">
-                <div className="timeline-card">
-                  <h3>Institute of Computer Science and Engineering</h3>
-                  <p className="timeline-p">
-                    National Chiao Tung University, Taiwan
-                  </p>
-                  <time>2020 - present</time>
-                </div>
-              </div>
-            </div>
+            <section className="experience-section">
+              <EmploymentList jobs={jobs} />
+            </section>
+            <SectionHeader headerClassName="main-header" title="Education" />
+            <section className="education-section">
+              <EducationList education={education} />
+            </section>
+            <SectionHeader headerClassName="main-header" title="Skills" />
+            <section className="skills-section">
+              <SkillsList languages={skills} />
+            </section>{" "}
           </main>
         </div>
       </div>
