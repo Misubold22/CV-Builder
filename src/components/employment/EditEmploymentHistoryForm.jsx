@@ -75,13 +75,24 @@ export function EditEmploymentHistoryForm({
               onChange={(e) => setForm({ ...form, endDate: e.target.value })}
             />
           </div>
+          <div className="form-group">
+            <label htmlFor="city">City:</label>
+
+            <input
+              id="city"
+              name="city"
+              type="text"
+              value={form.city}
+              onChange={(e) => setForm({ ...form, city: e.target.value })}
+            />
+          </div>
         </div>
         <div className="form-row">
           <div className="form-group">
-            <label htmlFor="description">Description</label>
+            <label htmlFor="jobDescription">Description</label>
 
             <textarea
-              id="description"
+              id="jobDescription"
               type="text"
               name=" jobDescription"
               value={form.jobDescription}

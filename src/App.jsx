@@ -1,130 +1,58 @@
 import "./App.css";
-import { useState } from "react";
-import { CustomButton } from "./components/common/CustomButton.jsx";
-import { SectionHeader } from "./components/common/SectionHeader.jsx";
+import { useState, useRef } from "react";
+import { useReactToPrint } from "react-to-print";
+
+import {
+  pastEducation,
+  pastJobs,
+  pastSkills,
+  pastLanguages,
+  defaultUserData,
+} from "./data";
+
 import { ProfilePicture } from "./components/personal/ProfilePicture.jsx";
 import { PersonalDetails } from "./components/personal/PersonalDetails.jsx";
-import { EmploymentCard } from "./components/employment/EmploymentCard.jsx";
-import { EmploymentHistoryForm } from "./components/employment/EmploymentHistoryForm.jsx";
-import { EditEmploymentHistoryForm } from "./components/employment/EditEmploymentHistoryForm.jsx";
-import { SkillsHistory } from "./components/skills/SkillsHistory.jsx";
-import { SkillsForm } from "./components/skills/SkillsForm.jsx";
-import { EditEducationHistoryForm } from "./components/education/EditEducationHistoryForm.jsx";
-import { EducationHistoryForm } from "./components/education/EducationHistoryForm.jsx";
-import { EducationCard } from "./components/education/EducationCard.jsx";
-import { LanguageForm } from "./components/languages/LanguageForm.jsx";
-import { LanguageCard } from "./components/languages/LanguageCard.jsx";
-import { ConvertToDisplayDate } from "./components/utils/dateUtils.js";
+import {
+  EmploymentCard,
+  EmploymentHistoryForm,
+  EditEmploymentHistoryForm,
+  EmploymentList,
+} from "./components/employment";
+import {
+  CustomButton,
+  SectionHeader,
+  DownloadCVButton,
+} from "./components/common";
+import {
+  EducationCard,
+  EducationHistoryForm,
+  EditEducationHistoryForm,
+  EducationList,
+} from "./components/education";
+import {
+  SkillsHistory,
+  SkillsForm,
+  SkillsList,
+  SkillsLabels,
+} from "./components/skills";
+import {
+  LanguageForm,
+  LanguageCard,
+  LanguagesList,
+} from "./components/languages";
+
+import { capitalizeFirstLetter, toTitleCase } from "./utils";
+
 import { motion } from "framer-motion";
-import { useReactToPrint } from "react-to-print";
-import { useRef } from "react";
-import { DownloadCVButton } from "./components/common/IconButton.jsx";
+
 import { FaPhoneAlt } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { SiMinutemailer } from "react-icons/si";
 import { ImLinkedin } from "react-icons/im";
 import { FaGithub } from "react-icons/fa";
 
-function EmploymentList({ jobs }) {
-  const listItems = jobs.map((job) => (
-    <li key={job.id}>
-      <div className="timeline-block">
-        <div className="time-container">
-          <h3 className="section-title">{job.jobrole}</h3>
-          <time>
-            {" "}
-            {ConvertToDisplayDate(job.startDate)} -
-            {ConvertToDisplayDate(job.endDate)}
-          </time>
-        </div>
-        <h4>{job.employer}</h4>
-        <p className="timeline-p"> {job.jobDescription}</p>{" "}
-      </div>
-    </li>
-  ));
-
-  return <ul>{listItems}</ul>;
-}
-
-function EducationList({ education }) {
-  const listItems = education.map((edu) => (
-    <li key={edu.id}>
-      <div className="timeline-block">
-        <div className="time-container">
-          <h3 className="section-title">{edu.school}</h3>
-          <time>
-            {" "}
-            {ConvertToDisplayDate(edu.startDate)} -
-            {ConvertToDisplayDate(edu.endDate)}
-          </time>
-        </div>
-        <div className="university-container">
-          <h4>
-            {edu.city} - {edu.degree}
-          </h4>
-        </div>
-        <p className="timeline-p"> {edu.educationDescription}</p>{" "}
-      </div>
-    </li>
-  ));
-
-  return <ul>{listItems}</ul>;
-}
-
-function SkillsList({ languages }) {
-  const listItems = languages.map((job) => (
-    <li key={job.id}>
-      <div className="timeline-block">
-        <div className="time-container">
-          <h5>{job.category}</h5>
-          <h5 className="userSkillsHeader">{job.skills}</h5>
-        </div>
-      </div>
-    </li>
-  ));
-
-  return <ul>{listItems}</ul>;
-}
-
-function LanguagesList({ jobs }) {
-  const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
-  const listItems = jobs.map((l) => (
-    <li key={l.id}>
-      <p className="sidebar-paragraph"> {capitalize(l.language)}</p>{" "}
-    </li>
-  ));
-
-  return <ul>{listItems}</ul>;
-}
-
-export function SkillsLabels() {
-  return (
-    <>
-      <div className="header-container">
-        <div className="categories-container">
-          <h3 className="categoriesHeader">Categories:</h3>
-        </div>
-        <div className="skill-container">
-          <h3 className="skillsHeader">Skills:</h3>
-        </div>
-      </div>
-    </>
-  );
-}
-
 function App() {
-  const [inputs, setInputs] = useState({
-    firstname: "Lukas",
-    lastname: "Meyerhoffer",
-    phone: "+49 151 2345 6789",
-    email: "lukas.meyer.dev@example.com",
-    address: "Munich, Germany",
-    occupation: "Frontend Developer",
-    linkedin: "linkedin.com/in/lukas-meyer-dev",
-    portfolio: "github.com/lukasmeyerdev",
-    about:
-      "Frontend Developer with 4 years of experience building responsive, accessible, and high-performance web applications. Experienced with React, JavaScript, TypeScript, HTML, and CSS, with a strong focus on clean code, component-based architecture, and intuitive user interfaces. Passionate about creating polished user experiences and continuously learning modern web technologies.",
-  });
+  const [inputs, setInputs] = useState(defaultUserData);
 
   const [profilePreview, setProfilePreview] = useState(null);
   const [isHidden, setIsHidden] = useState(false);
@@ -133,29 +61,6 @@ function App() {
   };
 
   const [isEditHidden, setIsEditHidden] = useState(false);
-
-  const pastJobs = [
-    {
-      id: 0,
-      jobrole: "Junior Frontend Developer",
-      employer: "NordSoft Solutions GmbH",
-      startDate: "2020-07-01",
-      endDate: "2022-05-31",
-      city: "Munich, Germany",
-      jobDescription:
-        "Developed and maintained responsive user interfaces using HTML, CSS, JavaScript, and React. Worked closely with senior developers to implement new features, fixed UI bugs and improved website accessibility.",
-    },
-    {
-      id: 1,
-      jobrole: "Frontend Developer",
-      employer: "TechVision Europe GmbH",
-      startDate: "2022-06-01",
-      endDate: "2026-03-15",
-      city: "Berlin, Germany",
-      jobDescription:
-        "Developed scalable web applications with React, TypeScript, and modern CSS. Collaborated with designers and backend developers to deliver accessible, high-performance solutions.",
-    },
-  ];
 
   const [jobs, setJobs] = useState(pastJobs);
 
@@ -171,6 +76,7 @@ function App() {
     employer: "",
     startDate: "",
     endDate: "",
+    city: "",
     jobDescription: "",
   });
 
@@ -200,21 +106,6 @@ function App() {
     );
   };
 
-  //
-
-  const pastSkills = [
-    {
-      id: 0,
-      category: "Programming Languages",
-      skills: "HTML, CSS, Javascript",
-    },
-    {
-      id: 1,
-      category: "Cloud services",
-      skills: "AWS, Google Cloud",
-    },
-  ];
-
   const [skills, setSkills] = useState([...pastSkills]);
 
   const [isSkillsFormHidden, setIsSkillsFormHidden] = useState(false);
@@ -223,44 +114,14 @@ function App() {
   };
   const handleSkillsSubmit = (skill) => {
     setSkills([...skills, skill]);
-    console.log(skills.map((skill) => skill.category));
-    console.log(skills.map((skill) => skill.skills));
   };
-  //
-  const resumeCategory = skills.map((skill) => skill.category + " ");
-  const resumeSkills = skills.map((skill) => skill.skills + " ");
 
-  //
   const [isEduFormHidden, setIsEduFormHidden] = useState(false);
   const handleValueChange = () => {
     setIsEduFormHidden(!isEduFormHidden);
   };
-  //
 
   const [isEduEditHidden, setIsEduEditHidden] = useState(false);
-
-  const pastEducation = [
-    {
-      id: 0,
-      school: "Technical University of Munich",
-      degree: "BSc. Computer Science",
-      startDate: "2017-10-01",
-      endDate: "2021-07-15",
-      city: "Munich, Germany",
-      educationDescription:
-        "Built a strong foundation in software engineering, algorithms, data structures, and web technologies. Completed multiple team projects developing responsive web applications using JavaScript and React.",
-    },
-    {
-      id: 1,
-      school: "Technical University of Munich",
-      degree: "MSc. Computer Science",
-      startDate: "2021-10-01",
-      endDate: "2023-07-15",
-      city: "Munich, Germany",
-      educationDescription:
-        "Specialized in distributed systems, cloud computing, and modern web application architecture. Completed a master's thesis on scalable cloud-native frontend applications and their performance optimization.",
-    },
-  ];
 
   const [education, setEducation] = useState(pastEducation);
 
@@ -305,29 +166,6 @@ function App() {
       }),
     );
   };
-
-  //
-
-  const pastLanguages = [
-    {
-      id: 0,
-      language: "german",
-    },
-
-    {
-      id: 1,
-      language: "english",
-    },
-    {
-      id: 2,
-      language: "french",
-    },
-
-    {
-      id: 3,
-      language: "spanish",
-    },
-  ];
 
   const [newLanguage, setNewLanguage] = useState(pastLanguages);
 
@@ -492,7 +330,9 @@ function App() {
                   {" "}
                   <FaLocationDot /> Address
                 </p>
-                <p className="sidebar-paragraph">{inputs.address}</p>
+                <p className="sidebar-paragraph">
+                  {toTitleCase(inputs.address)}
+                </p>
 
                 <p className="sidebar-title">
                   {" "}
@@ -531,10 +371,15 @@ function App() {
               <DownloadCVButton onClick={handlePrint} />
             </div>{" "}
             <h1 className="profile-header">
-              {inputs.firstname} {inputs.lastname}
+              {capitalizeFirstLetter(inputs.firstname)}{" "}
+              {capitalizeFirstLetter(inputs.lastname)}
             </h1>
-            <h2 className="occupation-header">{inputs.occupation}</h2>
-            <p className="profile-summary">{inputs.about}</p>
+            <h2 className="occupation-header">
+              {toTitleCase(inputs.occupation)}
+            </h2>
+            <p className="profile-summary">
+              {capitalizeFirstLetter(inputs.about)}
+            </p>
             <SectionHeader headerClassName="main-header" title="Employment" />
             <section className="experience-section">
               <EmploymentList jobs={jobs} />
@@ -545,7 +390,7 @@ function App() {
             </section>
             <SectionHeader headerClassName="main-header" title="Skills" />
             <section className="skills-section">
-              <SkillsList languages={skills} />
+              <SkillsList skills={skills} />
             </section>{" "}
           </main>
         </div>

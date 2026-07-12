@@ -1,12 +1,13 @@
 import { EditButton, DeleteButton } from "../common/IconButton.jsx";
-import { ConvertToDisplayDate } from "../utils/dateUtils.js";
+
+import { toTitleCase, ConvertToDisplayDate } from "../../utils";
 
 export function EmploymentCard({ person, handleEditingJob, handleJobDelete }) {
   return (
     <div className="card" key={person.id}>
       <div className="card-details">
         <h3 className="job-role">
-          {person.jobrole} at {person.employer}
+          {toTitleCase(person.jobrole)} at {toTitleCase(person.employer)}
         </h3>
         <p className="job-date">
           {" "}

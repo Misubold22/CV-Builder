@@ -15,6 +15,8 @@ export function EmploymentHistoryForm({ isHidden, setIsHidden, handleSubmit }) {
   const [employer, setEmployer] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [city, setCity] = useState("");
+  const [jobDescription, setJobDescription] = useState("");
 
   const submitForm = (e) => {
     e.preventDefault();
@@ -25,8 +27,9 @@ export function EmploymentHistoryForm({ isHidden, setIsHidden, handleSubmit }) {
       employer: e.target.employer.value,
       startDate: e.target.startdate.value,
       endDate: e.target.enddate.value,
+      city: e.target.city.value,
+      jobDescription: e.target.jobDescription.value,
       id: GenerateId(),
-      //id: nextId + 1,
     };
 
     handleSubmit(newJob);
@@ -81,25 +84,36 @@ export function EmploymentHistoryForm({ isHidden, setIsHidden, handleSubmit }) {
 
           <div className="form-group">
             <label htmlFor="enddate">End Date:</label>
-
             <input
               id="enddate"
               type="date"
               name="enddate"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
+            />{" "}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="city">City:</label>
+
+            <input
+              id="city"
+              name="city"
+              type="text"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
             />
           </div>
         </div>
         <div className="form-row">
           <div className="form-group">
-            <label htmlFor="description">Description</label>
+            <label htmlFor="jobDescription">Description</label>
 
             <textarea
-              id="description"
-              name="about"
-              /* T    value={inputs.about}
-                onChange={handleChange} */
+              id="jobDescription"
+              name="jobDescription"
+              value={jobDescription}
+              onChange={(e) => setJobDescription(e.target.value)}
               placeholder="I did a lot of things!"
               rows={2}
             />
