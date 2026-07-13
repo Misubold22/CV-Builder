@@ -1,11 +1,7 @@
 import { useState } from "react";
 import { IoEnter } from "react-icons/io5";
 import { IconContext } from "react-icons";
-
-function GenerateId() {
-  // return crypto.randomUUID();
-  return Math.floor(Math.random() * 100);
-}
+import { GenerateId } from "../../utils";
 
 function EnterIcon() {
   return (

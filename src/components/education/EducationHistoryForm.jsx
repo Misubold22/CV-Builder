@@ -1,10 +1,6 @@
 import { CustomButton } from "../common/CustomButton.jsx";
 import { useState } from "react";
-
-function GenerateId() {
-  // return crypto.randomUUID();
-  return Math.floor(Math.random() * 100);
-}
+import { GenerateId } from "../../utils";
 
 export function EducationHistoryForm({ isHidden, setIsHidden, handleSubmit }) {
   const handleChanges = () => {
