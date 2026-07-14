@@ -303,6 +303,11 @@ textarea {
   resize: none;
 }
 
+input[id="category"],
+input[id="skill"] {
+  padding-top: 5px;
+}
+
 input[id="language"] {
   width: 25%;
   min-width: 130px;
@@ -438,7 +443,7 @@ input[type="file"]:hover {
 }
 
 .skills-btn-containter {
-  padding-top: clamp(0.4rem, 1.5vw, 0.9rem);
+  padding-top: clamp(0.2rem, 1.5vw, 0.6rem);
 }
 
 .submit-btn,
@@ -520,6 +525,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:before {
   grid-template-columns: 1fr 2fr auto;
   gap: 10px;
   align-items: end;
+  padding-bottom: 5px;
 }
 
 .skills-form-group {
@@ -531,6 +537,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:before {
   color: black;
   padding-left: 5px;
 }
+
 .button-container,
 .del-button-container {
   position: relative;

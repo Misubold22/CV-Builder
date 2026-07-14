@@ -1,19 +1,7 @@
 import { useState } from "react";
-import { IoEnter } from "react-icons/io5";
-import { IconContext } from "react-icons";
 import { GenerateId } from "../../utils";
-
-function EnterIcon() {
-  return (
-    <>
-      <IconContext.Provider value={{ size: "25px" }}>
-        <div className="enter-icon-wrapper">
-          <IoEnter />
-        </div>
-      </IconContext.Provider>
-    </>
-  );
-}
+import { motion } from "framer-motion";
+import { EnterIcon } from "../../components/common";
 
 export function LanguageForm({ handleSubmit }) {
   const [language, setLanguage] = useState("");
@@ -33,7 +21,13 @@ export function LanguageForm({ handleSubmit }) {
 
   return (
     <>
-      <form onSubmit={submitForm}>
+      <motion.form
+        onSubmit={submitForm}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        transition={{ duration: 0.25 }}
+      >
         <div className="form-row">
           <div className="language-form-group">
             <EnterIcon />
@@ -47,7 +41,7 @@ export function LanguageForm({ handleSubmit }) {
             />
           </div>
         </div>
-      </form>
+      </motion.form>
     </>
   );
 }

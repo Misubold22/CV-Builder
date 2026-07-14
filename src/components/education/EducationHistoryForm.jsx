@@ -1,6 +1,7 @@
 import { CustomButton } from "../common/CustomButton.jsx";
 import { useState } from "react";
 import { GenerateId } from "../../utils";
+import { motion } from "framer-motion";
 
 export function EducationHistoryForm({ isHidden, setIsHidden, handleSubmit }) {
   const handleChanges = () => {
@@ -26,7 +27,6 @@ export function EducationHistoryForm({ isHidden, setIsHidden, handleSubmit }) {
       city: e.target.city.value,
       educationDescription: e.target.educationDescription.value,
       id: GenerateId(),
-      //id: nextId + 1,
     };
 
     handleSubmit(newEducation);
@@ -41,9 +41,12 @@ export function EducationHistoryForm({ isHidden, setIsHidden, handleSubmit }) {
 
   return (
     <>
-      <form
+      <motion.form
         onSubmit={submitForm}
-        style={{ display: isHidden ? "none" : "block" }}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        transition={{ duration: 0.25 }}
       >
         <div className="form-row">
           <div className="form-group">
@@ -130,7 +133,7 @@ export function EducationHistoryForm({ isHidden, setIsHidden, handleSubmit }) {
             onClick={handleChanges}
           />
         </div>
-      </form>
+      </motion.form>
     </>
   );
 }

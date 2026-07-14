@@ -1,4 +1,5 @@
 import { CustomButton } from "../common/CustomButton.jsx";
+import { motion } from "framer-motion";
 
 export function EditEducationHistoryForm({
   isHidden,
@@ -25,9 +26,12 @@ export function EditEducationHistoryForm({
 
   return (
     <>
-      <form
+      <motion.form
         onSubmit={submitForm}
-        style={{ display: isHidden ? "none" : "block" }}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        transition={{ duration: 0.25 }}
       >
         <div className="form-row">
           <div className="form-group">
@@ -114,7 +118,7 @@ export function EditEducationHistoryForm({
             onClick={() => setIsHidden(isHidden)}
           />
         </div>
-      </form>
+      </motion.form>
     </>
   );
 }

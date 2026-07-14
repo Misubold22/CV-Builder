@@ -6,3 +6,4 @@ export {
   SkillDeleteButton,
 } from "./IconButton";
 export { SectionHeader } from "./SectionHeader";
+export { EnterIcon } from "./EnterIcon";

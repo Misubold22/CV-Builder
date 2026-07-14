@@ -1,4 +1,3 @@
-import "./App.css";
 import { useState, useRef } from "react";
 import { useReactToPrint } from "react-to-print";
 
@@ -43,7 +42,7 @@ import {
 
 import { capitalizeFirstLetter, toTitleCase } from "./utils";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence, MotionConfig } from "framer-motion";
 
 import { FaPhoneAlt } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
@@ -56,8 +55,9 @@ function App() {
 
   const [profilePreview, setProfilePreview] = useState(null);
   const [isHidden, setIsHidden] = useState(false);
+
   const handleChange = () => {
-    setIsHidden(!isHidden);
+    setIsHidden((prev) => !prev);
   };
 
   const [isEditHidden, setIsEditHidden] = useState(false);
@@ -68,7 +68,6 @@ function App() {
     setJobs([...jobs, job]);
   };
 
-  const [editingJob, setEditingJob] = useState(null);
   const [editingJobId, setJobId] = useState(null);
 
   const [form, setForm] = useState({
@@ -82,9 +81,9 @@ function App() {
 
   function handleEditingJob(id) {
     const job = jobs.find((j) => j.id === id);
-    setIsEditHidden(!isEditHidden);
+
+    setIsEditHidden((prev) => !prev);
     setForm(job);
-    setEditingJob(id);
     setJobId(id);
   }
 
@@ -110,7 +109,7 @@ function App() {
 
   const [isSkillsFormHidden, setIsSkillsFormHidden] = useState(false);
   const handleSklillsFormChange = () => {
-    setIsSkillsFormHidden(!isSkillsFormHidden);
+    setIsSkillsFormHidden((prev) => !prev);
   };
   const handleSkillsSubmit = (skill) => {
     setSkills([...skills, skill]);
@@ -118,7 +117,7 @@ function App() {
 
   const [isEduFormHidden, setIsEduFormHidden] = useState(false);
   const handleValueChange = () => {
-    setIsEduFormHidden(!isEduFormHidden);
+    setIsEduFormHidden((prev) => !prev);
   };
 
   const [isEduEditHidden, setIsEduEditHidden] = useState(false);
@@ -188,214 +187,251 @@ function App() {
   });
 
   return (
-    <div className="split-container">
-      <div className="split-left">
-        <div className="left-wrapper">
-          <h1 className="resume-builder-header">Resume builder</h1>
-          <form className="responsive-form">
-            <SectionHeader title="Personal Details" />
-            <PersonalDetails inputs={inputs} setInputs={setInputs} />
-            <ProfilePicture setProfilePreview={setProfilePreview} />
-          </form>
-          <SectionHeader title="Employment History " />
-          {jobs.map((job) => (
-            <motion.div key={job.id}>
-              <EmploymentCard
-                handleEditingJob={handleEditingJob}
-                handleJobDelete={handleJobDelete}
-                person={job}
+    <MotionConfig transition={{ duration: 0.4, ease: "easeInOut" }}>
+      <div className="split-container">
+        <div className="split-left">
+          <div className="left-wrapper">
+            <h1 className="resume-builder-header">Resume builder</h1>
+            <form className="responsive-form">
+              <SectionHeader title="Personal Details" />
+              <PersonalDetails inputs={inputs} setInputs={setInputs} />
+              <ProfilePicture setProfilePreview={setProfilePreview} />
+            </form>
+            <SectionHeader title="Employment History " />
+            <AnimatePresence>
+              {jobs.map((job) => (
+                <motion.div
+                  key={job.id}
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0 }}
+                >
+                  <EmploymentCard
+                    handleEditingJob={handleEditingJob}
+                    handleJobDelete={handleJobDelete}
+                    person={job}
+                  />
+
+                  <AnimatePresence mode="wait">
+                    {isEditHidden && editingJobId === job.id && (
+                      <EditEmploymentHistoryForm
+                        isHidden={false}
+                        setIsHidden={setIsEditHidden}
+                        handleSubmit={handleEditSubmit}
+                        editingJobId={editingJobId}
+                        jobs={jobs}
+                        form={form}
+                        setForm={setForm}
+                      />
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+            <AnimatePresence mode="wait">
+              {isHidden && (
+                <EmploymentHistoryForm
+                  isHidden={false}
+                  setIsHidden={setIsHidden}
+                  handleSubmit={handleSubmit}
+                />
+              )}
+            </AnimatePresence>
+            <div
+              className="btn-containter"
+              style={{ display: isHidden ? "none" : "block" }}
+            >
+              <CustomButton
+                className="custom-btn"
+                label="Add Employment"
+                onClick={handleChange}
               />
+            </div>
+            <SectionHeader title="Education " />
+            <AnimatePresence>
+              {education.map((study) => (
+                <motion.div
+                  key={study.id}
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0 }}
+                >
+                  <EducationCard
+                    handleEditingJob={handleEducationEdit}
+                    handleJobDelete={handleEducationDelete}
+                    person={study}
+                  />
 
-              {editingJobId === job.id && (
-                <EditEmploymentHistoryForm
-                  isHidden={!isEditHidden}
-                  setIsHidden={setIsEditHidden}
-                  handleSubmit={handleEditSubmit}
-                  editingJobId={editingJob}
-                  jobs={jobs}
-                  form={form}
-                  setForm={setForm}
+                  <AnimatePresence mode="wait">
+                    {isEduEditHidden && editingEducationId === study.id && (
+                      <EditEducationHistoryForm
+                        isHidden={false}
+                        setIsHidden={setIsEduEditHidden}
+                        handleSubmit={handleEducationEditSubmit}
+                        editingJobId={editingEducation}
+                        jobs={education}
+                        form={educationForm}
+                        setForm={setEducationForm}
+                      />
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+            <AnimatePresence mode="wait">
+              {isEduFormHidden && (
+                <EducationHistoryForm
+                  isHidden={false}
+                  setIsHidden={setIsEduFormHidden}
+                  handleSubmit={handleEducationSubmit}
                 />
               )}
-            </motion.div>
-          ))}
-          {isHidden && (
-            <EmploymentHistoryForm
-              isHidden={!isHidden}
-              setIsHidden={setIsHidden}
-              handleSubmit={handleSubmit}
-            />
-          )}
-          <div
-            className="btn-containter"
-            style={{ display: isHidden ? "none" : "block" }}
-          >
-            <CustomButton
-              className="custom-btn"
-              label="Add Employment"
-              onClick={handleChange}
-            />
-          </div>
-          <SectionHeader title="Education " />
-          {education.map((study) => (
-            <motion.div key={study.id}>
-              <EducationCard
-                handleEditingJob={handleEducationEdit}
-                handleJobDelete={handleEducationDelete}
-                person={study}
+            </AnimatePresence>
+            <div
+              className="btn-containter"
+              style={{ display: isEduFormHidden ? "none" : "block" }}
+            >
+              <CustomButton
+                className="custom-btn"
+                label="Add Education"
+                onClick={handleValueChange}
               />
-
-              {editingEducationId === study.id && (
-                <EditEducationHistoryForm
-                  isHidden={!isEduEditHidden}
-                  setIsHidden={setIsEduEditHidden}
-                  handleSubmit={handleEducationEditSubmit}
-                  editingJobId={editingEducation}
-                  jobs={education}
-                  form={educationForm}
-                  setForm={setEducationForm}
-                />
-              )}
-            </motion.div>
-          ))}
-          {isEduFormHidden && (
-            <EducationHistoryForm
-              isHidden={!isEduFormHidden}
-              setIsHidden={setIsEduFormHidden}
-              handleSubmit={handleEducationSubmit}
-            />
-          )}
-          <div
-            className="btn-containter"
-            style={{ display: isEduFormHidden ? "none" : "block" }}
-          >
-            <CustomButton
-              className="custom-btn"
-              label="Add Education"
-              onClick={handleValueChange}
-            />
-          </div>{" "}
-          <SectionHeader title="Skills" />
-          <SkillsLabels />
-          <SkillsHistory skills={skills} setSkills={setSkills} />
-          {isSkillsFormHidden && (
-            <SkillsForm
-              isHidden={!isSkillsFormHidden}
-              setIsHidden={setIsSkillsFormHidden}
-              handleSubmit={handleSkillsSubmit}
-            />
-          )}
-          <div
-            className="skills-btn-containter"
-            style={{ display: isSkillsFormHidden ? "none" : "block" }}
-          >
-            <CustomButton
-              className="custom-btn"
-              label="Add Skill"
-              onClick={handleSklillsFormChange}
-            />
-          </div>
-          <SectionHeader title="Languages" />
-          <LanguageForm handleSubmit={handleLanguageSubmit} />
-          <div className="languageBtn-containter">
-            {newLanguage.map((lang) => (
-              <div key={lang.id}>
-                <LanguageCard
-                  handleLanguageDelete={handleLanguageDelete}
-                  lang={lang}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="split-right">
-        <div className="resume-layout" ref={componentRef}>
-          <aside className="resume-sidebar">
-            <figure className="profile-picture">
-              {" "}
-              {profilePreview && (
-                <img
-                  src={profilePreview}
-                  alt="profile preview"
-                  className="profile-preview"
-                />
-              )}
-            </figure>{" "}
-            <section className="contact-section">
-              <h2 className="contact-header"> Contact</h2>
-              <address>
-                <p className="sidebar-title">
-                  {" "}
-                  <FaLocationDot /> Address
-                </p>
-                <p className="sidebar-paragraph">
-                  {toTitleCase(inputs.address)}
-                </p>
-
-                <p className="sidebar-title">
-                  {" "}
-                  <FaPhoneAlt /> Phone
-                </p>
-                <p className="sidebar-paragraph">{inputs.phone}</p>
-
-                <p className="sidebar-title">
-                  {" "}
-                  <SiMinutemailer /> Email
-                </p>
-                <p className="sidebar-paragraph">{inputs.email}</p>
-
-                <p className="sidebar-title">
-                  {" "}
-                  <ImLinkedin /> Linkedin
-                </p>
-                <p className="sidebar-paragraph">{inputs.linkedin}</p>
-
-                <p className="sidebar-title">
-                  {" "}
-                  <FaGithub /> Portfolio
-                </p>
-                <p className="sidebar-paragraph">{inputs.portfolio}</p>
-              </address>
-            </section>
-            <section className="language-section">
-              <h2 className="contact-header">Languages</h2>
-
-              <LanguagesList jobs={newLanguage} />
-            </section>
-          </aside>
-          <main className="resume-content">
-            {" "}
-            <div className="downloadBtn-container">
-              <DownloadCVButton onClick={handlePrint} />
             </div>{" "}
-            <h1 className="profile-header">
-              {capitalizeFirstLetter(inputs.firstname)}{" "}
-              {capitalizeFirstLetter(inputs.lastname)}
-            </h1>
-            <h2 className="occupation-header">
-              {toTitleCase(inputs.occupation)}
-            </h2>
-            <p className="profile-summary">
-              {capitalizeFirstLetter(inputs.about)}
-            </p>
-            <SectionHeader headerClassName="main-header" title="Employment" />
-            <section className="experience-section">
-              <EmploymentList jobs={jobs} />
-            </section>
-            <SectionHeader headerClassName="main-header" title="Education" />
-            <section className="education-section">
-              <EducationList education={education} />
-            </section>
-            <SectionHeader headerClassName="main-header" title="Skills" />
-            <section className="skills-section">
-              <SkillsList skills={skills} />
-            </section>{" "}
-          </main>
+            <SectionHeader title="Skills" />
+            <SkillsLabels />
+            <SkillsHistory skills={skills} setSkills={setSkills} />
+            <AnimatePresence>
+              <AnimatePresence mode="wait">
+                {isSkillsFormHidden && (
+                  <SkillsForm
+                    isHidden={false}
+                    setIsHidden={setIsSkillsFormHidden}
+                    handleSubmit={handleSkillsSubmit}
+                  />
+                )}{" "}
+              </AnimatePresence>
+            </AnimatePresence>
+            <div
+              className="skills-btn-containter"
+              style={{ display: isSkillsFormHidden ? "none" : "block" }}
+            >
+              <CustomButton
+                className="custom-btn"
+                label="Add Skill"
+                onClick={handleSklillsFormChange}
+              />
+            </div>
+            <SectionHeader title="Languages" />
+            <AnimatePresence>
+              <LanguageForm handleSubmit={handleLanguageSubmit} />
+            </AnimatePresence>
+            <div className="languageBtn-containter">
+              <AnimatePresence>
+                {newLanguage.map((lang) => (
+                  <motion.div
+                    key={lang.id}
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0 }}
+                  >
+                    <LanguageCard
+                      handleLanguageDelete={handleLanguageDelete}
+                      lang={lang}
+                    />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          </div>
+        </div>
+
+        <div className="split-right">
+          <div className="resume-layout" ref={componentRef}>
+            <aside className="resume-sidebar">
+              <figure className="profile-picture">
+                {" "}
+                {profilePreview && (
+                  <img
+                    src={profilePreview}
+                    alt="profile preview"
+                    className="profile-preview"
+                  />
+                )}
+              </figure>{" "}
+              <section className="contact-section">
+                <h2 className="contact-header"> Contact</h2>
+                <address>
+                  <p className="sidebar-title">
+                    {" "}
+                    <FaLocationDot /> Address
+                  </p>
+                  <p className="sidebar-paragraph">
+                    {toTitleCase(inputs.address)}
+                  </p>
+
+                  <p className="sidebar-title">
+                    {" "}
+                    <FaPhoneAlt /> Phone
+                  </p>
+                  <p className="sidebar-paragraph">{inputs.phone}</p>
+
+                  <p className="sidebar-title">
+                    {" "}
+                    <SiMinutemailer /> Email
+                  </p>
+                  <p className="sidebar-paragraph">{inputs.email}</p>
+
+                  <p className="sidebar-title">
+                    {" "}
+                    <ImLinkedin /> Linkedin
+                  </p>
+                  <p className="sidebar-paragraph">{inputs.linkedin}</p>
+
+                  <p className="sidebar-title">
+                    {" "}
+                    <FaGithub /> Portfolio
+                  </p>
+                  <p className="sidebar-paragraph">{inputs.portfolio}</p>
+                </address>
+              </section>
+              <section className="language-section">
+                <h2 className="contact-header">Languages</h2>
+
+                <LanguagesList jobs={newLanguage} />
+              </section>
+            </aside>
+            <main className="resume-content">
+              {" "}
+              <div className="downloadBtn-container">
+                <DownloadCVButton onClick={handlePrint} />
+              </div>{" "}
+              <h1 className="profile-header">
+                {capitalizeFirstLetter(inputs.firstname)}{" "}
+                {capitalizeFirstLetter(inputs.lastname)}
+              </h1>
+              <h2 className="occupation-header">
+                {toTitleCase(inputs.occupation)}
+              </h2>
+              <p className="profile-summary">
+                {capitalizeFirstLetter(inputs.about)}
+              </p>
+              <SectionHeader headerClassName="main-header" title="Employment" />
+              <section className="experience-section">
+                <EmploymentList jobs={jobs} />
+              </section>
+              <SectionHeader headerClassName="main-header" title="Education" />
+              <section className="education-section">
+                <EducationList education={education} />
+              </section>
+              <SectionHeader headerClassName="main-header" title="Skills" />
+              <section className="skills-section">
+                <SkillsList skills={skills} />
+              </section>{" "}
+            </main>
+          </div>
         </div>
       </div>
-    </div>
+    </MotionConfig>
   );
 }
 
