@@ -1,6 +1,5 @@
 import { useState, useRef } from "react";
 import { useReactToPrint } from "react-to-print";
-
 import {
   pastEducation,
   pastJobs,
@@ -8,7 +7,7 @@ import {
   pastLanguages,
   defaultUserData,
 } from "./data";
-
+import defaultProfilePic from "./assets/defaultProfilePic.jpg";
 import { ProfilePicture } from "./components/personal/ProfilePicture.jsx";
 import { PersonalDetails } from "./components/personal/PersonalDetails.jsx";
 import {
@@ -39,11 +38,8 @@ import {
   LanguageCard,
   LanguagesList,
 } from "./components/languages";
-
 import { capitalizeFirstLetter, toTitleCase } from "./utils";
-
 import { motion, AnimatePresence, MotionConfig } from "framer-motion";
-
 import { FaPhoneAlt } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { SiMinutemailer } from "react-icons/si";
@@ -52,8 +48,7 @@ import { FaGithub } from "react-icons/fa";
 
 function App() {
   const [inputs, setInputs] = useState(defaultUserData);
-
-  const [profilePreview, setProfilePreview] = useState(null);
+  const [profilePreview, setProfilePreview] = useState(defaultProfilePic);
   const [isHidden, setIsHidden] = useState(false);
 
   const handleChange = () => {
@@ -61,7 +56,6 @@ function App() {
   };
 
   const [isEditHidden, setIsEditHidden] = useState(false);
-
   const [jobs, setJobs] = useState(pastJobs);
 
   const handleSubmit = (job) => {
@@ -81,7 +75,6 @@ function App() {
 
   function handleEditingJob(id) {
     const job = jobs.find((j) => j.id === id);
-
     setIsEditHidden((prev) => !prev);
     setForm(job);
     setJobId(id);
@@ -89,7 +82,6 @@ function App() {
 
   const handleJobDelete = (id) => {
     const updatedJobList = jobs.filter((job) => job.id !== id);
-
     setJobs(updatedJobList);
   };
 
@@ -106,22 +98,23 @@ function App() {
   };
 
   const [skills, setSkills] = useState([...pastSkills]);
-
   const [isSkillsFormHidden, setIsSkillsFormHidden] = useState(false);
+
   const handleSklillsFormChange = () => {
     setIsSkillsFormHidden((prev) => !prev);
   };
+
   const handleSkillsSubmit = (skill) => {
     setSkills([...skills, skill]);
   };
 
   const [isEduFormHidden, setIsEduFormHidden] = useState(false);
+
   const handleValueChange = () => {
     setIsEduFormHidden((prev) => !prev);
   };
 
   const [isEduEditHidden, setIsEduEditHidden] = useState(false);
-
   const [education, setEducation] = useState(pastEducation);
 
   const handleEducationSubmit = (ed) => {
@@ -150,7 +143,6 @@ function App() {
 
   const handleEducationDelete = (id) => {
     const updatedEduList = education.filter((job) => job.id !== id);
-
     setEducation(updatedEduList);
   };
 
@@ -176,7 +168,6 @@ function App() {
     const updatedLanguageList = newLanguage.filter(
       (language) => language.id !== id,
     );
-
     setNewLanguage(updatedLanguageList);
   };
 
